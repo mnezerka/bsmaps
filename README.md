@@ -6,6 +6,14 @@ post. The implementation is based on excelent [Leaflet](https://leafletjs.com/)
 javascript library. Current implementation suppor only single type of level -
 tourist map from [mapy.cz](https://mapy.cz).
 
+## Demo
+
+See screenshot as well as my personal [blog
+post](http://blue.pavoucek.cz/2020-ponure-jeseniky/) with rendered map.
+
+![Image of Yaktocat](static/img/screenshot1.png)
+
+
 ## Installation
 
 Plugin is not registered in WordPress plugin repository so it is not possible
