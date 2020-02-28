@@ -10,15 +10,15 @@ Text Domain: bsmaps
 Domain Path: /languages
 */
 
-/*
- * Implementation of BSMaps plugin
- */
+// Implementation of BSMaps plugin
 class BSMaps
 {
     public function __construct()
     {
         add_action('init', array($this, 'onInit'));
-        add_filter('upload_mimes', array($this, 'onUploadMimeTypes'), 1, 1);
+        add_filter('upload_mimes', array($this, 'onUploadMimeTypes'));
+        add_filter('wp_check_filetype_and_ext', array($this, 'onCheckFiletypeAndExt'), 10, 4);
+
         add_action('wp_enqueue_scripts', array($this, 'onEnqueueScripts'));
     }
 
@@ -52,15 +52,32 @@ class BSMaps
         // mime types that plugin allows to upload to posts (media)
         $mimeTypes['gpx'] = 'text/xml';
 
+        // Return the array back to the function with our added mime type.
         return $mimeTypes;
     }
 
-    /**
-    * Implementation of "bsmap" shortcode
-    *
-    * @param array $attr Attributes of the shortcode.
-    * @return string HTML content to be sent to browser 
-    */
+    // we needs this filter for some reason, not completely clear to me, it was introduced
+    // in fix plugin, see this:
+    // 1
+    // Known issue that was introduced in 4.7.1:
+    // https://core.trac.wordpress.org/ticket/39550
+    // There is a plugin to workaround it for those having this problem. A fix
+    // will likely be in the next release.
+    // https://wordpress.org/plugins/disable-real-mime-check/
+    public function onCheckFiletypeAndExt($data, $file, $filename, $mimes) {
+        $wp_filetype = wp_check_filetype( $filename, $mimes );
+
+        $ext = $wp_filetype['ext'];
+        $type = $wp_filetype['type'];
+        $proper_filename = $data['proper_filename'];
+
+        return compact( 'ext', 'type', 'proper_filename' );
+    }
+
+    // Implementation of "bsmap" shortcode
+    //
+    // @param array $attr Attributes of the shortcode.
+    // @return string HTML content to be sent to browser 
     public function bsmap_shortcode($atts)
     {
         global $post;
