@@ -70,6 +70,15 @@ class BSMaps
         static $instance = 0;
         $instance++;
 
+        //These are all the 'options' you can pass in through the
+        // shortcode definition, eg: [gallery itemtag='p']
+        extract(shortcode_atts(array(
+            'order'      => 'ASC',
+            'orderby'    => 'menu_order ID',
+            'id'         => $post->ID,
+            'size'       => 'thumbnail'
+        ), $attr));
+
         // get xml (gpx) files attached to current post
         $attachments = get_children(array(
             'post_parent' => $id,
