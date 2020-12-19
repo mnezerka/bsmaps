@@ -1,0 +1,24 @@
+{
+    "name": "block-bsmap",
+    "version": "1.0.0",
+    "description": "Blue Site Map (BSMap) Block",
+    "scripts": {
+        "start": "parcel watch --no-hmr js/block.js -d dist",
+        "build": "parcel build js/block.js -d dist",
+        "lint": "eslint assets"
+    },
+    "author": "michal.nezerka@gmail.com",
+    "devDependencies": {
+        "babel-core": "^6.26.3",
+        "babel-eslint": "^10.0.3",
+        "babel-plugin-transform-react-jsx": "^6.24.1",
+        "eslint": "^6.6.0",
+        "eslint-config-wordpress": "^2.0.0",
+        "eslint-plugin-jest": "^23.0.2",
+        "eslint-plugin-jsx-a11y": "^6.2.3",
+        "eslint-plugin-react": "^7.16.0",
+        "parcel-bundler": "^1.12.4",
+        "sass": "^1.23.3"
+    },
+    "private": true
+}

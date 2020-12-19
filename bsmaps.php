@@ -20,10 +20,10 @@ class BSMaps
         add_filter('wp_check_filetype_and_ext', array($this, 'onCheckFiletypeAndExt'), 10, 4);
 
         add_action('wp_enqueue_scripts', array($this, 'onEnqueueScripts'));
+        add_action('enqueue_block_editor_assets', array($this, 'onEnqueueBlockEditorAssets'));
     }
 
     public function onEnqueueScripts() {
-
         // leaflet
         wp_enqueue_style('leaflet-css', 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.css');
         wp_enqueue_script('leaflet-js', 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.js');
@@ -40,10 +40,52 @@ class BSMaps
         wp_enqueue_style('bsmaps-css', plugins_url('/css/bsmaps.css',__FILE__ ));
     }
 
+    public function onEnqueueBlockEditorAssets() {
+        wp_enqueue_script(
+            'bsmap-block',
+            esc_url(plugins_url('/dist/block.js', __FILE__)),
+            array(
+                'wp-blocks',
+                'wp-element',
+                'wp-editor',
+                'wp-components',
+                'wp-compose',
+                'wp-data',
+            ),
+            null,
+            true // enqueue script in the footer
+        );
+
+        // Enqueue styles
+        wp_enqueue_style(
+            'image-selector-example-styles',
+            esc_url(plugins_url( '/dist/block.css', __FILE__ )),
+            array('wp-editor'),
+            '1.0.0'
+        );
+    }
+
     public function onInit()
     {
-        // Add shortcode for maps
+        // add shortcode for maps
         add_shortcode('bsmap', array($this, 'bsmap_shortcode'));
+
+        // if Gutenberg is active.
+        /*
+        if (function_exists( 'register_block_type')) {
+
+            wp_register_script(
+                'bsmaps',
+                plugins_url('js/block.js', __FILE__),
+                array('wp-blocks', 'wp-element'),
+                filemtime(plugin_dir_path(__FILE__) . 'js/block.js')
+            );
+
+            register_block_type( 'bsmaps/bsmap', array(
+                'editor_script' => 'bsmaps',
+            ));
+        }
+         */
     }
 
     // register gpx mime types to enable upload to media

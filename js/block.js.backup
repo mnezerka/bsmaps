@@ -1,0 +1,37 @@
+( function( blocks, element) {
+    var el = element.createElement;
+    //var useBlockProps = blockEditor.useBlockProps;
+
+    var blockStyle = {
+        backgroundColor: '#900',
+        color: '#fff',
+        padding: '20px',
+    };
+
+    blocks.registerBlockType('bsmaps/bsmap', {
+        apiVersion: 2,
+        title: 'Map',
+        icon: 'universal-access-alt',
+        category: 'design',
+        example: {},
+        edit: function() {
+            return el(
+                'p',
+                {style: blockStyle},
+                'Hello, this is map in Edit'
+            );
+        },
+        save: function() {
+            hello();
+            console.log('hello');
+            return el(
+                'p',
+                {style: blockStyle},
+                'Hello, this is map in Save'
+            );
+        },
+    });
+}(
+    window.wp.blocks,
+    window.wp.element
+));
