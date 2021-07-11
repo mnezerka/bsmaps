@@ -45,10 +45,11 @@ function updateTracks() {
         var legend_line = '<div class="track-legend"><i style="background:' + tracks[i].color + '"></i>&nbsp;'
 
         // track name
-        legend_line += tracks[i].name + '&nbsp;'
+        legend_line += tracks[i].name
 
         // track distance
         if (tracks[i].distance && tracks[i].distance > 0) {
+            legend_line += ',&nbsp;'
             legend_line += formatDistance(tracks[i].distance)
         }
 
@@ -61,10 +62,10 @@ function updateTracks() {
         // track moving time
         if (tracks[i].moving_time && tracks[i].moving_time > 0) {
             legend_line += ',&nbsp;'
-            legend_line = tracks[i].moving_time
+            legend_line += tracks[i].moving_time_str
         }
 
-        // track gpx
+        // track gpx link 
         if (tracks[i].url) {
             legend_line += ',&nbsp;'
             var filename = tracks[i].url.replace(/^.*[\\\/]/, '')
@@ -142,7 +143,8 @@ if (params && params.gpxList) {
                 name: e.target.get_name(),
                 distance: e.target.get_distance(),
                 elevation_gain: e.target.get_elevation_gain(),
-                moving_time: e.target.get_duration_string_iso(e.target.get_moving_time()),
+                moving_time_str: e.target.get_duration_string_iso(e.target.get_moving_time()),
+                moving_time: e.target.get_moving_time(),
                 color,
                 url: e.target._gpx // warning: this is private attribute, isn't part of public api
             });

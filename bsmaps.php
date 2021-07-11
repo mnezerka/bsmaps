@@ -3,7 +3,7 @@
 vim: set expandtab sw=4 ts=4 sts=4 foldmethod=indent:
 Plugin Name: BSMaps
 Description: Wordpress plugin for rendering maps and gpx tracks in post content
-Version: 1.1
+Version: 1.2
 Author: Michal Nezerka
 Author URI: http://blue.pavoucek.cz
 Text Domain: bsmaps
