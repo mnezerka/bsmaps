@@ -3,7 +3,7 @@
 vim: set expandtab sw=4 ts=4 sts=4 foldmethod=indent:
 Plugin Name: BSMaps
 Description: Wordpress plugin for rendering maps and gpx tracks in post content
-Version: 1.0
+Version: 1.1
 Author: Michal Nezerka
 Author URI: http://blue.pavoucek.cz
 Text Domain: bsmaps
@@ -129,23 +129,14 @@ class BSMaps
         static $instance = 0;
         $instance++;
 
-        //These are all the 'options' you can pass in through the
-        // shortcode definition, eg: [gallery itemtag='p']
-        extract(shortcode_atts(array(
-            'order'      => 'ASC',
-            'orderby'    => 'menu_order ID',
-            'id'         => $post->ID,
-            'size'       => 'thumbnail'
-        ), $attr));
-
         // get xml (gpx) files attached to current post
         $attachments = get_children(array(
-            'post_parent' => $id,
+            'post_parent' => $post->ID,
             'post_status' => 'inherit',
             'post_type' => 'attachment',
             'post_mime_type' => 'text/xml',
-            'order' => $order,
-            'orderby' => $orderby));
+            'order' => 'ASC',
+            'orderby' => 'menu_order ID'));
 
         // build list of attachment urls
         $gpxList = [];
@@ -155,7 +146,7 @@ class BSMaps
         }
 
         // element to which map is rendered
-        $output .= '<div id="bsmap" style="width: 100%; height: 400px;"></div>';
+        $output = '<div id="bsmap" style="width: 100%; height: 400px;"></div>';
 
         // this is way how Wordpres supports passing php parameters to javascript
         $jsData = array(
