@@ -1,0 +1,16 @@
+{
+  "name": "bsmaps-block",
+  "version": "1.0.0",
+  "description": "BSMaps Block ",
+  "main": "bsmaps-block.js",
+  "scripts": {
+    "build": "wp-scripts build src/bsmaps-block --output-path=dist/bsmaps",
+    "lint-js": "wp-scripts lint-js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Michal Nezerka",
+  "license": "MIT",
+  "devDependencies": {
+    "@wordpress/scripts": "13.0.2"
+  }
+}

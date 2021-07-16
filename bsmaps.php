@@ -15,14 +15,29 @@ class BSMaps
 {
     public function __construct()
     {
+        add_filter( 'block_categories', array( $this, 'simple_block_gallery_category' ), 10, 2 ); 
+
         add_action('init', array($this, 'onInit'));
+		add_action('init', array($this, 'block_init'));
+
         add_filter('upload_mimes', array($this, 'onUploadMimeTypes'));
         add_filter('wp_check_filetype_and_ext', array($this, 'onCheckFiletypeAndExt'), 10, 4);
 
         add_action('wp_enqueue_scripts', array($this, 'onEnqueueScripts'));
-        add_action('enqueue_block_editor_assets', array($this, 'onEnqueueBlockEditorAssets'));
     }
 
+    public function simple_block_gallery_category( $categories, $post ) {
+		return array_merge(
+			$categories,
+			array(
+				array(
+					'slug' => 'simple-block-gallery',
+					'title' => 'Simple Block Gallery',
+					'icon' => 'images-alt',
+				),
+			)
+		);
+	}
     public function onEnqueueScripts() {
         // leaflet
         wp_enqueue_style('leaflet-css', 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.css');
@@ -38,31 +53,6 @@ class BSMaps
         // needs to be inserted into the footer, it needs to see DOM element for rendering
         wp_enqueue_script('bsmaps-js', plugins_url('/js/bsmaps.js', __FILE__), array('leaflet-js', 'leaflet-gpx-js'), null, 1);
         wp_enqueue_style('bsmaps-css', plugins_url('/css/bsmaps.css',__FILE__ ));
-    }
-
-    public function onEnqueueBlockEditorAssets() {
-        wp_enqueue_script(
-            'bsmap-block',
-            esc_url(plugins_url('/dist/block.js', __FILE__)),
-            array(
-                'wp-blocks',
-                'wp-element',
-                'wp-editor',
-                'wp-components',
-                'wp-compose',
-                'wp-data',
-            ),
-            null,
-            true // enqueue script in the footer
-        );
-
-        // Enqueue styles
-        wp_enqueue_style(
-            'image-selector-example-styles',
-            esc_url(plugins_url( '/dist/block.css', __FILE__ )),
-            array('wp-editor'),
-            '1.0.0'
-        );
     }
 
     public function onInit()
@@ -87,6 +77,59 @@ class BSMaps
         }
          */
     }
+
+	public function block_init() {
+
+		$asset_file = include( plugin_dir_path( __FILE__ ) . 'block/dist/bsmaps/bsmaps-block.asset.php');
+
+		wp_register_script(
+			'bsmaps-block',
+			plugins_url( 'block/dist/bsmaps/bsmaps-block.js',  __FILE__ ),
+			$asset_file['dependencies'],
+			$asset_file['version'],
+			true
+		);
+
+		wp_localize_script(
+			'bsmaps-block',
+			'bsmaps_text',
+			array(
+				'panelmenu' => __( 'Settings' ),
+				'creategallery' => __( 'Create Gallery' ),
+				'updategallery' => __( 'Update gallery' ),
+				'space' => __( 'Space', 'simple-block-gallery' ),
+				'r_images' => __( 'Rounded Images', 'simple-block-gallery' ),
+				'link' => __( 'Link to Media File' ),
+				'width' => __( 'Width' ),
+			)
+		);
+
+		register_block_type(
+			'simple-block-gallery/bsmaps-block',
+			array(
+				'editor_script'   => 'bsmaps-block',
+				'attributes'      => array(
+					'width'    => array(
+						'type'    => 'number',
+						'default' => 100,
+					),
+					'padding'  => array(
+						'type'    => 'number',
+						'default' => 1,
+					),
+					'r_images' => array(
+						'type'    => 'boolean',
+						'default' => true,
+					),
+					'link'     => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
+				),
+			)
+		);
+
+	}
 
     // register gpx mime types to enable upload to media
     public function onUploadMimeTypes($mimeTypes = array())
